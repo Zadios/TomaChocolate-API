@@ -6,7 +6,7 @@
 ### Objetivo
 Resolver el cálculo de deudas compartidas minimizando la cantidad de transferencias necesarias entre los usuarios.
 
-### 🛠️ Tech Stack (MVP)
+### Tech Stack (MVP)
 * **Backend:** Java 21 + Spring Boot 4
 * **Database:** PostgreSQL (JPA/Hibernate)
 * **Doc:** Swagger/OpenAPI
