@@ -1,5 +1,6 @@
 package com.tomachocolate.api.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -18,5 +19,6 @@ public class Participant {
 
     @ManyToOne
     @JoinColumn(name = "meeting_id")
+    @JsonIgnore
     private Meeting meeting;
 }
