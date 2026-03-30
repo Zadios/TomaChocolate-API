@@ -16,10 +16,10 @@ public class CleanupService {
 
     private final MeetingRepository meetingRepository;
 
-    @Scheduled(fixedRate = 10000) // Recordá volver a 86400000 después del test
+    @Scheduled(fixedRate = 86400000)
     @Transactional
     public void autoPurgeOldMeetings() {
-        LocalDateTime expirationLimit = LocalDateTime.now().minusMinutes(1);
+        LocalDateTime expirationLimit = LocalDateTime.now().minusDays(2);
 
         log.info("Iniciando purga de datos efímeros...");
 
