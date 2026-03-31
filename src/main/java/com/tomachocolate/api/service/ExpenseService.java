@@ -11,6 +11,8 @@ import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.UUID;
+
 @Service
 @RequiredArgsConstructor
 public class ExpenseService {
@@ -19,8 +21,8 @@ public class ExpenseService {
     private final MeetingRepository meetingRepository;
 
     @Transactional
-    public Expense addExpense(ExpenseRequest expenseRequest) {
-        Meeting meeting = meetingRepository.findById(expenseRequest.meetingId())
+    public Expense addExpense(UUID meetingId, ExpenseRequest expenseRequest) {
+        Meeting meeting = meetingRepository.findById(meetingId)
                 .orElseThrow(() -> new RuntimeException("No se encontró la juntada"));
         Participant payer = participantRepository.findById(expenseRequest.payerId())
                 .orElseThrow(() -> new RuntimeException("No se encontró el participante"));

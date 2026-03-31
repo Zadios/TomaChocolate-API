@@ -13,8 +13,5 @@ public record ExpenseRequest(
         BigDecimal amount,
 
         @NotNull(message = "Debes indicar quién pagó")
-        Long payerId,
-
-        @NotNull(message = "El ID de la juntada es obligatorio")
-        UUID meetingId
+        Long payerId
 ) {}

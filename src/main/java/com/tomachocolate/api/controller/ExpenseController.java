@@ -8,15 +8,20 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.UUID;
+
 @RestController
 @RequestMapping("/api/expenses")
 @RequiredArgsConstructor
 public class ExpenseController {
     private final ExpenseService expenseService;
 
-    @PostMapping()
+    @PostMapping("/{meetingId}/expenses")
     @ResponseStatus(HttpStatus.CREATED)
-    public Expense createExpense(@Valid @RequestBody ExpenseRequest request) {
-        return expenseService.addExpense(request);
+    public Expense createExpense(
+            @PathVariable UUID meetingId,
+            @Valid @RequestBody ExpenseRequest request
+    ) {
+        return expenseService.addExpense(meetingId, request);
     }
 }
