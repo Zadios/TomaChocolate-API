@@ -2,7 +2,6 @@ package com.tomachocolate.api.dto;
 
 import jakarta.validation.constraints.*;
 import java.math.BigDecimal;
-import java.util.UUID;
 
 public record ExpenseRequest(
         @NotBlank(message = "La descripción es obligatoria")
