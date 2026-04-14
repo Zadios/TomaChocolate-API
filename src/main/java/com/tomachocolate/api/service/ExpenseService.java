@@ -11,6 +11,7 @@ import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
 import java.util.UUID;
 
 @Service
@@ -40,5 +41,35 @@ public class ExpenseService {
 
         meeting.getExpenses().add(expense);
         return expenseRepository.save(expense);
+    }
+
+    @Transactional
+    public void deleteExpense(UUID meetingId, Long expenseId) {
+        Meeting meeting = meetingRepository.findById(meetingId)
+                .orElseThrow(() -> new RuntimeException("No se encontró la juntada"));
+
+        Expense expense = expenseRepository.findById(expenseId)
+                .orElseThrow(() -> new RuntimeException("Gasto no encontrado"));
+
+        if (!expense.getMeeting().getId().equals(meetingId)) {
+            throw new RuntimeException("El gasto no pertenece a esta juntada");
+        }
+
+        meeting.getExpenses().remove(expense);
+        expenseRepository.delete(expense);
+    }
+
+    @Transactional
+    public void updateExpense(Long expenseId, ExpenseRequest request) {
+        Expense expense = expenseRepository.findById(expenseId)
+                .orElseThrow(() -> new RuntimeException("Gasto no encontrado"));
+
+        expense.setAmount(request.amount());
+        expense.setDescription(request.description());
+
+        Participant newPayer = participantRepository.findById(request.payerId())
+                .orElseThrow(() -> new RuntimeException("El nuevo pagador no existe"));
+
+        expense.setPayer(newPayer);
     }
 }
