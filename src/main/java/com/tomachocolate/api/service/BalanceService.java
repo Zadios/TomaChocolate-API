@@ -3,6 +3,7 @@ package com.tomachocolate.api.service;
 import com.tomachocolate.api.dto.MeetingBalanceResponse;
 import com.tomachocolate.api.dto.ParticipantBalance;
 import com.tomachocolate.api.dto.TransferStrategy;
+import com.tomachocolate.api.exception.ResourceNotFoundException;
 import com.tomachocolate.api.model.Expense;
 import com.tomachocolate.api.model.Meeting;
 import com.tomachocolate.api.model.Participant;
@@ -22,7 +23,7 @@ public class BalanceService {
 
     public MeetingBalanceResponse calculateBalance(UUID meetingId){
         Meeting meeting = meetingRepository.findById(meetingId)
-                .orElseThrow(() -> new RuntimeException("No se encontró la juntada"));
+                .orElseThrow(() -> new ResourceNotFoundException("No pudimos encontrar la juntada con ID: " + meetingId));
 
         BigDecimal total = meeting.getExpenses().stream()
                 .map(Expense::getAmount)

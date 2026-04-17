@@ -1,5 +1,6 @@
 package com.tomachocolate.api.service;
 
+import com.tomachocolate.api.exception.ResourceNotFoundException;
 import com.tomachocolate.api.model.Meeting;
 import com.tomachocolate.api.model.Participant;
 import com.tomachocolate.api.repository.ExpenseRepository;
@@ -17,7 +18,7 @@ public class ParticipantService {
     @Transactional
     public void updateName(Long id, String newName) {
         Participant participant = participantRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Participante no encontrado"));
+                .orElseThrow(() -> new ResourceNotFoundException("No pudimos encontrar al participante con ID: " + id));
 
         participant.setName(newName);
         participantRepository.save(participant);
@@ -26,7 +27,7 @@ public class ParticipantService {
     @Transactional
     public void deleteParticipant(Long id) {
         Participant participant = participantRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Participante no encontrado"));
+                .orElseThrow(() -> new ResourceNotFoundException("No pudimos encontrar al participante con ID: " + id));
 
         Meeting meeting = participant.getMeeting();
 

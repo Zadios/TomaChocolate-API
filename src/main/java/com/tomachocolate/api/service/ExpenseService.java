@@ -1,6 +1,8 @@
 package com.tomachocolate.api.service;
 
 import com.tomachocolate.api.dto.ExpenseRequest;
+import com.tomachocolate.api.exception.BadRequestException;
+import com.tomachocolate.api.exception.ResourceNotFoundException;
 import com.tomachocolate.api.model.Expense;
 import com.tomachocolate.api.model.Meeting;
 import com.tomachocolate.api.model.Participant;
@@ -24,12 +26,17 @@ public class ExpenseService {
     @Transactional
     public Expense addExpense(UUID meetingId, ExpenseRequest expenseRequest) {
         Meeting meeting = meetingRepository.findById(meetingId)
-                .orElseThrow(() -> new RuntimeException("No se encontró la juntada"));
+                .orElseThrow(() -> new ResourceNotFoundException("No se encontró la juntada"));
+
         Participant payer = participantRepository.findById(expenseRequest.payerId())
-                .orElseThrow(() -> new RuntimeException("No se encontró el participante"));
+                .orElseThrow(() -> new ResourceNotFoundException("No se encontró el participante"));
+
+        if (expenseRequest.amount().compareTo(BigDecimal.ZERO) <= 0) {
+            throw new BadRequestException("El monto del gasto debe ser mayor a cero.");
+        }
 
         if (!meeting.getId().equals(payer.getMeeting().getId())) {
-            throw new RuntimeException("El participante no pertenece a esta juntada");
+            throw new BadRequestException("El participante no pertenece a esta juntada");
         }
 
         Expense expense = Expense.builder()
@@ -60,15 +67,19 @@ public class ExpenseService {
     }
 
     @Transactional
-    public void updateExpense(Long expenseId, ExpenseRequest request) {
+    public void updateExpense(Long expenseId, ExpenseRequest expenseRequest) {
+        if (expenseRequest.amount().compareTo(BigDecimal.ZERO) <= 0) {
+            throw new BadRequestException("El monto del gasto debe ser mayor a cero.");
+        }
+
         Expense expense = expenseRepository.findById(expenseId)
-                .orElseThrow(() -> new RuntimeException("Gasto no encontrado"));
+                .orElseThrow(() -> new ResourceNotFoundException("No pudimos encontrar el gasto con ID: " + expenseId));
 
-        expense.setAmount(request.amount());
-        expense.setDescription(request.description());
+        expense.setAmount(expenseRequest.amount());
+        expense.setDescription(expenseRequest.description());
 
-        Participant newPayer = participantRepository.findById(request.payerId())
-                .orElseThrow(() -> new RuntimeException("El nuevo pagador no existe"));
+        Participant newPayer = participantRepository.findById(expenseRequest.payerId())
+                .orElseThrow(() -> new ResourceNotFoundException("El nuevo pagador no existe"));
 
         expense.setPayer(newPayer);
     }
