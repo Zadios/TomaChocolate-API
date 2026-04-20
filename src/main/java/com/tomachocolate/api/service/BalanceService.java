@@ -51,6 +51,7 @@ public class BalanceService {
         }
 
         return MeetingBalanceResponse.builder()
+                .meetingName(meeting.getName())
                 .participantBalances(balances)
                 .averagePerPerson(average)
                 .totalAmount(total)

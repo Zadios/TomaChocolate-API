@@ -7,6 +7,7 @@ import java.util.List;
 
 @Builder
 public record MeetingBalanceResponse(
+        String meetingName,
         BigDecimal totalAmount,
         BigDecimal averagePerPerson,
         List<ParticipantBalance> participantBalances,
