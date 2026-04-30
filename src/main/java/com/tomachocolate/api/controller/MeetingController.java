@@ -27,6 +27,11 @@ public class MeetingController {
         return meetingService.createMeeting(name, participantCount);
     }
 
+    @GetMapping("/{id}")
+    public Meeting getMeetingById(@PathVariable UUID id) {
+        return meetingService.getMeeting(id);
+    }
+
     @GetMapping("/{id}/balance")
     public MeetingBalanceResponse getBalance(@PathVariable UUID id) {
         return balanceService.calculateBalance(id);

@@ -8,4 +8,5 @@ import java.util.UUID;
 
 public interface MeetingRepository extends JpaRepository<Meeting, UUID> {
     Long deleteByCreatedAtBefore(LocalDateTime expiryDate);
+    Meeting getMeetingById(UUID meetingId);
 }

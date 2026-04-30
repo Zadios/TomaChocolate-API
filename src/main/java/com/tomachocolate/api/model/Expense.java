@@ -1,6 +1,7 @@
 package com.tomachocolate.api.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -30,4 +31,14 @@ public class Expense {
     @JoinColumn(name = "meeting_id")
     @JsonIgnore
     private Meeting meeting;
+
+    @JsonProperty("payerName")
+    public String getPayerName() {
+        return payer != null ? payer.getName() : "Desconocido";
+    }
+
+    @JsonProperty("payerId")
+    public Long getPayerId() {
+        return payer != null ? payer.getId() : null;
+    }
 }
