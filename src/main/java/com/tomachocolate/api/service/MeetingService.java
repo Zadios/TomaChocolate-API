@@ -1,5 +1,6 @@
 package com.tomachocolate.api.service;
 
+import com.tomachocolate.api.exception.BadRequestException;
 import com.tomachocolate.api.exception.ResourceNotFoundException;
 import com.tomachocolate.api.model.Meeting;
 import com.tomachocolate.api.model.Participant;
@@ -17,6 +18,13 @@ public class MeetingService {
 
     @Transactional
     public Meeting createMeeting(String name, int participantCount){
+        if(name.length() > 32){
+            throw new BadRequestException("Ingrese un nombre de máximo 32 caracteres");
+        }
+
+        if(participantCount > 30){
+            throw new BadRequestException("Máximo de 30 participantes");
+        }
         Meeting meeting = new Meeting();
         meeting.setName(name);
         meeting.setParticipantCount(participantCount);

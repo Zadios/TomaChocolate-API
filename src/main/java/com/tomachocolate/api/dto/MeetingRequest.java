@@ -5,10 +5,10 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 
 public record MeetingRequest(
-        @NotBlank(message = "El nombre de la juntada no puede estar vacío")
+        @NotBlank(message = "Ingrese el nombre")
         String name,
 
-        @NotNull(message = "Debes indicar cuántas personas son")
-        @Min(value = 2, message = "Mínimo tienen que ser 2 personas")
+        @NotNull(message = "Ingrese el número de participantes")
+        @Min(value = 2, message = "Mínimo 2 participantes")
         Integer participantCount
 ) {}

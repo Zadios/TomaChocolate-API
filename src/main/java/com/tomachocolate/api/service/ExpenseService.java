@@ -29,7 +29,7 @@ public class ExpenseService {
                 .orElseThrow(() -> new ResourceNotFoundException("No se encontró la juntada"));
 
         Participant payer = participantRepository.findById(expenseRequest.payerId())
-                .orElseThrow(() -> new ResourceNotFoundException("No se encontró el participante"));
+                .orElseThrow(() -> new ResourceNotFoundException("El participante no existe"));
 
         if (expenseRequest.amount().compareTo(BigDecimal.ZERO) <= 0) {
             throw new BadRequestException("El monto del gasto debe ser mayor a cero.");
@@ -56,7 +56,7 @@ public class ExpenseService {
                 .orElseThrow(() -> new RuntimeException("No se encontró la juntada"));
 
         Expense expense = expenseRepository.findById(expenseId)
-                .orElseThrow(() -> new RuntimeException("Gasto no encontrado"));
+                .orElseThrow(() -> new RuntimeException("El gasto no existe"));
 
         if (!expense.getMeeting().getId().equals(meetingId)) {
             throw new RuntimeException("El gasto no pertenece a esta juntada");
@@ -73,7 +73,7 @@ public class ExpenseService {
         }
 
         Expense expense = expenseRepository.findById(expenseId)
-                .orElseThrow(() -> new ResourceNotFoundException("No pudimos encontrar el gasto con ID: " + expenseId));
+                .orElseThrow(() -> new ResourceNotFoundException("El gasto no existe"));
 
         expense.setAmount(expenseRequest.amount());
         expense.setDescription(expenseRequest.description());
