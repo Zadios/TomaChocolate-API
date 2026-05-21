@@ -6,7 +6,6 @@
 
 Este proyecto provee los servicios necesarios para la interfaz web: [TomaChocolate-Front](https://github.com/Zadios/TomaChocolate-Front).
 
-* * *
 
 ## Características Principales
 
@@ -15,7 +14,6 @@ Este proyecto provee los servicios necesarios para la interfaz web: [TomaChocola
 - **Exposición de Servicios REST:** Endpoints desacoplados, limpios y configurados con políticas de CORS para una integración nativa con interfaces de usuario modernas.
 - **Arquitectura Robusta:** Manejo global de excepciones para garantizar respuestas estructuradas ante errores y validación estricta de datos mediante DTOs.
 
-* * *
 
 ## Tecnologías Utilizadas
 
@@ -29,7 +27,6 @@ El backend fue desarrollado bajo estándares modernos del ecosistema de Java:
 * **Maven** (Como herramienta de automatización de construcción y ciclo de vida del proyecto).
 * **Swagger / OpenAPI** (Para la documentación, prueba y exposición interactiva de los endpoints).
 
-* * *
 
 ## Configuración local (clonar proyecto en otra computadora)
 
@@ -61,7 +58,6 @@ La API estará disponible localmente en http://localhost:8080.
 Una vez que el servidor esté corriendo, podés acceder a la interfaz interactiva para probar los endpoints en:
 http://localhost:8080/swagger-ui/index.html
 
-* * *
 
 ## Estructura del Proyecto
 
@@ -81,6 +77,6 @@ src/main/java/com/tomachocolate/api/
 * **config/WebConfig.java:** Centraliza las políticas de CORS, permitiendo la comunicación segura y nativa con el frontend de React (http://localhost:5173).
 
 * **dto/:** Protege el modelo de la base de datos utilizando DTOs (como MeetingRequest o ParticipantUpdateDTO) para tipar estrictamente los datos que ingresan y egresan de la API.
-***
+
 ## Desarrollador
 - Ariel Viscovich - [LinkedIn](https://www.linkedin.com/in/arielviscovich)
