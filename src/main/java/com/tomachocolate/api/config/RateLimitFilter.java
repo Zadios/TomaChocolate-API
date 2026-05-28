@@ -42,9 +42,11 @@ public class RateLimitFilter implements Filter {
             if (!bucket.tryConsume(1)) {
                 httpResponse.setStatus(HttpStatus.TOO_MANY_REQUESTS.value());
                 httpResponse.setContentType("application/json;charset=UTF-8");
+                
+                String envUrl = System.getenv("FRONTEND_URL");
+                String frontendUrl = (envUrl != null) ? envUrl : "http://localhost:5173";
 
-                // Configuración manual de cabeceras CORS para permitir la lectura del error desde el cliente
-                httpResponse.setHeader("Access-Control-Allow-Origin", "http://localhost:5173");
+                httpResponse.setHeader("Access-Control-Allow-Origin", frontendUrl);
                 httpResponse.setHeader("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
                 httpResponse.setHeader("Access-Control-Allow-Headers", "*");
                 httpResponse.setHeader("Access-Control-Allow-Credentials", "true");
