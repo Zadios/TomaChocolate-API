@@ -42,7 +42,7 @@ public class RateLimitFilter implements Filter {
             if (!bucket.tryConsume(1)) {
                 httpResponse.setStatus(HttpStatus.TOO_MANY_REQUESTS.value());
                 httpResponse.setContentType("application/json;charset=UTF-8");
-                
+
                 String envUrl = System.getenv("FRONTEND_URL");
                 String frontendUrl = (envUrl != null) ? envUrl : "http://localhost:5173";
 
