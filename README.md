@@ -1,82 +1,84 @@
-# Toma Chocolate - API
+# TomaChocolate - API
 
-> "Toma chocolate, paga lo que debes."
+> **Live Demo:** [tomachocolate.vercel.app](https://tomachocolate.vercel.app/)
 
-¡Bienvenido al repositorio del backend de **Toma Chocolate**! Esta es la API REST de una aplicación diseñada para simplificar y optimizar la división de gastos grupales en juntadas, asados o eventos. El objetivo principal es ofrecer una experiencia de usuario sumamente sencilla, rápida y sólida pero sin dejar de lado funcionalidades en el proceso.
+*Note: The application interface is in Spanish as it is tailored for local users in Latin America to split everyday expenses.*
 
-Este proyecto provee los servicios necesarios para la interfaz web: [TomaChocolate-Front](https://github.com/Zadios/TomaChocolate-Front).
+Welcome to the TomaChocolate backend repository! This is the REST API of an application designed to simplify and optimize the split of group expenses in gatherings, barbecues, or events. The main goal is to offer an extremely simple, fast, and robust user experience without leaving functionalities aside in the process.
 
-
-## Características Principales
-
-- **Gestión Centralizada de Datos:** Procesa y persiste de manera eficiente la información de juntadas, participantes y gastos asociados mediante un modelo relacional.
-- **Cálculo Inteligente de Saldos:** Incorpora un algoritmo optimizado en el servidor que automatiza la división de cuentas, minimizando la cantidad de transferencias cruzadas necesarias.
-- **Exposición de Servicios REST:** Endpoints desacoplados, limpios y configurados con políticas de CORS para una integración nativa con interfaces de usuario modernas.
-- **Arquitectura Robusta:** Manejo global de excepciones para garantizar respuestas estructuradas ante errores y validación estricta de datos mediante DTOs.
+This project provides the necessary services for the web interface: [TomaChocolate-Front](https://github.com/Zadios/TomaChocolate-Front).
 
 
-## Tecnologías Utilizadas
+## Main Features
 
-El backend fue desarrollado bajo estándares modernos del ecosistema de Java:
-
-* **Java 21** (Aprovechando las últimas características estables del lenguaje).
-* **Spring Boot 3.x** (Framework principal para la creación de la API REST y la inyección de dependencias).
-* **Spring Data JPA / Hibernate** (Para el mapeo de entidades y abstracción de la base de datos).
-* **MySQL** (Base de datos relacional para la persistencia del estado de las juntadas y gastos).
-* **Lombok** (Para la reducción de código repetitivo/boilerplate).
-* **Maven** (Como herramienta de automatización de construcción y ciclo de vida del proyecto).
-* **Swagger / OpenAPI** (Para la documentación, prueba y exposición interactiva de los endpoints).
+- **Centralized Data Management:** Efficiently processes and persists information regarding gatherings, participants, and associated expenses through a relational model.
+- **Smart Balance Calculation:** Incorporates an optimized algorithm on the server that automates the split of bills, minimizing the amount of cross-transfers needed.
+- **REST Services Exposure:** Decoupled, clean endpoints configured with CORS policies for native integration with modern user interfaces.
+- **Robust Architecture:** Global exception handling to guarantee structured error responses and strict data validation using DTOs.
 
 
-## Configuración local (clonar proyecto en otra computadora)
+## Technologies Used
 
-#### 1\. Clonar el repositorio
+The backend was developed under modern standards of the Java ecosystem:
+
+* **Java 21** (Taking advantage of the language's latest stable features).
+* **Spring Boot 3.x** (Main framework for REST API creation and dependency injection).
+* **Spring Data JPA / Hibernate** (For entity mapping and database abstraction).
+* **MySQL** (Relational database for the persistence of the status of gatherings and expenses).
+* **Lombok** (For reducing boilerplate code).
+* **Maven** (As a build automation tool and project lifecycle management).
+* **Swagger / OpenAPI** (For documentation, testing, and interactive exposure of endpoints).
+
+
+## Local Setup (clone project on another computer)
+
+#### 1\. Clone the repository
 
 ```bash
 git clone https://github.com/Zadios/TomaChocolate-API.git
 cd TomaChocolate-API
 ```
 
-#### 2\. Configurar la base de datos:
-Asegurate de tener corriendo una instancia de MySQL y creá una base de datos llamada tomachocolate_db. Luego, verificá tus credenciales en el archivo src/main/resources/application.properties:
+#### 2\. Configure the database:
+Make sure you have a MySQL instance running and create a database named tomachocolate_db. Then, verify your credentials in the src/main/resources/application.properties file:
 ```properties
 spring.datasource.url=jdbc:mysql://localhost:3306/tomachocolate_db
-spring.datasource.username=tu_usuario
-spring.datasource.password=tu_contraseña
+spring.datasource.username=your_username
+spring.datasource.password=your_password
 ```
 
-#### 3\. Levantar la aplicación:
+#### 3\. Run the application:
 
-Podés compilar y correr el servidor utilizando el wrapper de Maven desde la raíz del proyecto:
+You can compile and run the server using the Maven wrapper from the project root:
 
 ```text
 ./mvnw spring-boot:run
 ```
-La API estará disponible localmente en http://localhost:8080.
+The API will be available locally at http://localhost:8080.
 
-#### 4\. Documentación de la API (Swagger):
-Una vez que el servidor esté corriendo, podés acceder a la interfaz interactiva para probar los endpoints en:
+#### 4\. API Documentation (Swagger):
+Once the server is running, you can access the interactive interface to test the endpoints at:
 http://localhost:8080/swagger-ui/index.html
 
 
-## Estructura del Proyecto
+## Project Structure
 
-El backend sigue una arquitectura por capas estandarizada para Spring Boot, promoviendo el desacoplamiento y la fácil mantenibilidad:
+The backend follows a standardized layered architecture for Spring Boot, promoting decoupling and easy maintainability:
 
 ```text
 src/main/java/com/tomachocolate/api/
-├── config/       # Configuraciones globales de la app (CORS, seguridad, etc.)
-├── controller/   # Endpoints de la API REST (Meetings, Expenses, Participants)
-├── dto/          # Objetos de Transferencia de Datos (Requests, Responses y Payloads)
-├── exception/    # Manejo global de excepciones y respuestas estructuradas de error
-├── model/        # Entidades del dominio para la persistencia con JPA / Hibernate
-├── repository/   # Capa de acceso a datos (Spring Data Repositories)
-└── service/      # Lógica de negocio pura (Algoritmo de optimización de saldos)
+├── config/       # Global app configurations (CORS, security, etc.)
+├── controller/   # REST API endpoints (Meetings, Expenses, Participants)
+├── dto/          # Data Transfer Objects (Requests, Responses, and Payloads)
+├── exception/    # Global exception handling and structured error responses
+├── model/        # Domain entities for persistence with JPA / Hibernate
+├── repository/   # Data access layer (Spring Data Repositories)
+└── service/      # Pure business logic (Balance optimization algorithm)
 ```
-#### Detalle de Paquetes Clave:
-* **config/WebConfig.java:** Centraliza las políticas de CORS, permitiendo la comunicación segura y nativa con el frontend de React (http://localhost:5173).
+#### Key Package Details:
+* **config/WebConfig.java:** Centralizes CORS policies, allowing secure and native communication with the React frontend (http://localhost:5173).
 
-* **dto/:** Protege el modelo de la base de datos utilizando DTOs (como MeetingRequest o ParticipantUpdateDTO) para tipar estrictamente los datos que ingresan y egresan de la API.
+* **dto/:** Protects the database model using DTOs (such as MeetingRequest or ParticipantUpdateDTO) to strictly type the data entering and leaving the API.
 
-## Desarrollador
+## Developer
 - Ariel Viscovich - [LinkedIn](https://www.linkedin.com/in/arielviscovich)
