@@ -14,7 +14,10 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -39,11 +42,14 @@ public class ExpenseService {
             throw new BadRequestException("El participante no pertenece a esta juntada");
         }
 
+        Set<Participant> consumers = resolveConsumers(meeting, expenseRequest.consumerIds());
+
         Expense expense = Expense.builder()
                 .meeting(meeting)
                 .payer(payer)
                 .description(expenseRequest.description())
                 .amount(expenseRequest.amount())
+                .consumers(consumers)
                 .build();
 
         meeting.getExpenses().add(expense);
@@ -82,5 +88,24 @@ public class ExpenseService {
                 .orElseThrow(() -> new ResourceNotFoundException("El nuevo pagador no existe"));
 
         expense.setPayer(newPayer);
+
+        Set<Participant> consumers = resolveConsumers(expense.getMeeting(), expenseRequest.consumerIds());
+        expense.setConsumers(consumers);
+    }
+
+    private Set<Participant> resolveConsumers(Meeting meeting, java.util.List<Long> consumerIds) {
+        if (consumerIds == null || consumerIds.isEmpty()) {
+            return new HashSet<>(meeting.getParticipants());
+        }
+
+        Set<Participant> consumers = meeting.getParticipants().stream()
+                .filter(p -> consumerIds.contains(p.getId()))
+                .collect(Collectors.toSet());
+
+        if (consumers.isEmpty()) {
+            throw new BadRequestException("Debe seleccionar al menos un consumidor válido para el gasto.");
+        }
+
+        return consumers;
     }
 }

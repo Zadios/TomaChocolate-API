@@ -21,7 +21,7 @@ import java.util.stream.Collectors;
 public class BalanceService {
     private final MeetingRepository meetingRepository;
 
-    public MeetingBalanceResponse calculateBalance(UUID meetingId){
+    public MeetingBalanceResponse calculateBalance(UUID meetingId) {
         Meeting meeting = meetingRepository.findById(meetingId)
                 .orElseThrow(() -> new ResourceNotFoundException("No pudimos encontrar la juntada con ID: " + meetingId));
 
@@ -29,24 +29,54 @@ public class BalanceService {
                 .map(Expense::getAmount)
                 .reduce(BigDecimal.ZERO, BigDecimal::add);
 
-        BigDecimal average = total.divide(BigDecimal.valueOf(meeting.getParticipantCount()), 2, RoundingMode.HALF_UP);
-        List<ParticipantBalance> balances = new ArrayList<>();
+        BigDecimal average = meeting.getParticipantCount() > 0
+                ? total.divide(BigDecimal.valueOf(meeting.getParticipantCount()), 2, RoundingMode.HALF_UP)
+                : BigDecimal.ZERO;
 
-        Map<Long, BigDecimal> totalsByParticipant = meeting.getExpenses().stream()
+        Map<Long, BigDecimal> totalsPaidByParticipant = meeting.getExpenses().stream()
                 .collect(Collectors.groupingBy(
                         expense -> expense.getPayer().getId(),
                         Collectors.mapping(Expense::getAmount,
                                 Collectors.reducing(BigDecimal.ZERO, BigDecimal::add))
                 ));
 
+        Map<Long, BigDecimal> totalsConsumedByParticipant = new HashMap<>();
         for (Participant participant : meeting.getParticipants()) {
-            BigDecimal amountPaid = totalsByParticipant.getOrDefault(participant.getId(), BigDecimal.ZERO);
+            totalsConsumedByParticipant.put(participant.getId(), BigDecimal.ZERO);
+        }
+
+        for (Expense expense : meeting.getExpenses()) {
+            Set<Participant> consumers = expense.getConsumers();
+
+            if (consumers == null || consumers.isEmpty()) {
+                consumers = new HashSet<>(meeting.getParticipants());
+            }
+
+            int consumerCount = consumers.size();
+            if (consumerCount > 0) {
+                BigDecimal portion = expense.getAmount().divide(
+                        BigDecimal.valueOf(consumerCount), 4, RoundingMode.HALF_UP);
+
+                for (Participant consumer : consumers) {
+                    totalsConsumedByParticipant.merge(consumer.getId(), portion, BigDecimal::add);
+                }
+            }
+        }
+        
+        List<ParticipantBalance> balances = new ArrayList<>();
+        for (Participant participant : meeting.getParticipants()) {
+            BigDecimal amountPaid = totalsPaidByParticipant.getOrDefault(participant.getId(), BigDecimal.ZERO);
+            BigDecimal amountConsumed = totalsConsumedByParticipant.getOrDefault(participant.getId(), BigDecimal.ZERO)
+                    .setScale(2, RoundingMode.HALF_UP);
+
+            BigDecimal netBalance = amountPaid.subtract(amountConsumed);
 
             ParticipantBalance participantBalance = ParticipantBalance.builder()
                     .name(participant.getName())
                     .totalPaid(amountPaid)
-                    .balance(amountPaid.subtract(average))
+                    .balance(netBalance)
                     .build();
+
             balances.add(participantBalance);
         }
 
@@ -91,7 +121,6 @@ public class BalanceService {
             }
         }
         return suggestions;
-
     }
 
     private static class MutableBalance {
