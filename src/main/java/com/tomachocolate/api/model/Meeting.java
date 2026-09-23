@@ -23,7 +23,7 @@ public class Meeting {
     @Column(name = "participant_count")
     private Integer participantCount;
 
-    @Column(name = "created_at")
+    @Column(name = "created_at", updatable = false)
     @Setter(AccessLevel.NONE)
     private LocalDateTime createdAt = LocalDateTime.now();
 

@@ -2,6 +2,7 @@ package com.tomachocolate.api.dto;
 
 import jakarta.validation.constraints.*;
 import java.math.BigDecimal;
+import java.util.List;
 
 public record ExpenseRequest(
         @NotBlank(message = "La descripción es obligatoria")
@@ -12,5 +13,7 @@ public record ExpenseRequest(
         BigDecimal amount,
 
         @NotNull(message = "Debes indicar quién pagó")
-        Long payerId
+        Long payerId,
+
+        List<Long> consumerIds
 ) {}

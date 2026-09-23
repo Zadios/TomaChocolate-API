@@ -18,28 +18,35 @@ public class MeetingService {
 
     @Transactional
     public Meeting createMeeting(String name, int participantCount){
-        if(name.length() > 32){
+        if (name.length() > 32) {
             throw new BadRequestException("Ingrese un nombre de máximo 32 caracteres");
         }
 
-        if(participantCount > 30){
+        if (participantCount > 30) {
             throw new BadRequestException("Máximo de 30 participantes");
         }
+
         Meeting meeting = new Meeting();
         meeting.setName(name);
         meeting.setParticipantCount(participantCount);
 
-        for (int i = 1; i <= participantCount; i++){
+        for (int i = 1; i <= participantCount; i++) {
             Participant p = new Participant();
             p.setName("Usuario " + i);
             meeting.addParticipant(p);
         }
 
+        meetingRepository.incrementTotalMeetings();
         return meetingRepository.save(meeting);
     }
 
-    public Meeting getMeeting(UUID meetingId){
+    public Meeting getMeeting(UUID meetingId) {
         return meetingRepository.findById(meetingId)
                 .orElseThrow(() -> new ResourceNotFoundException("No se encontró la juntada"));
+    }
+
+    public Long getTotalMeetingsCount() {
+        Long total = meetingRepository.getTotalMeetingsCount();
+        return total != null ? total : 0L;
     }
 }

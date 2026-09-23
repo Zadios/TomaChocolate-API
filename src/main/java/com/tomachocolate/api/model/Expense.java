@@ -6,6 +6,10 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import java.math.BigDecimal;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 @Entity
 @Table(name = "expenses")
@@ -32,6 +36,16 @@ public class Expense {
     @JsonIgnore
     private Meeting meeting;
 
+    @ManyToMany
+    @JoinTable(
+            name = "expense_consumers",
+            joinColumns = @JoinColumn(name = "expense_id"),
+            inverseJoinColumns = @JoinColumn(name = "participant_id")
+    )
+    @Builder.Default
+    @JsonIgnore
+    private Set<Participant> consumers = new HashSet<>();
+
     @JsonProperty("payerName")
     public String getPayerName() {
         return payer != null ? payer.getName() : "Desconocido";
@@ -40,5 +54,13 @@ public class Expense {
     @JsonProperty("payerId")
     public Long getPayerId() {
         return payer != null ? payer.getId() : null;
+    }
+
+    @JsonProperty("consumerIds")
+    public List<Long> getConsumerIds() {
+        if (consumers == null) return List.of();
+        return consumers.stream()
+                .map(Participant::getId)
+                .collect(Collectors.toList());
     }
 }
