@@ -62,7 +62,7 @@ public class BalanceService {
                 }
             }
         }
-        
+
         List<ParticipantBalance> balances = new ArrayList<>();
         for (Participant participant : meeting.getParticipants()) {
             BigDecimal amountPaid = totalsPaidByParticipant.getOrDefault(participant.getId(), BigDecimal.ZERO);

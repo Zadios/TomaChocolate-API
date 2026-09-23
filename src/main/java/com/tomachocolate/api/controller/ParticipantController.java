@@ -36,8 +36,10 @@ public class ParticipantController {
 
     @PostMapping("{meetingId}/participant")
     @ResponseStatus(HttpStatus.CREATED)
-    public Participant createParticipant(@PathVariable UUID meetingId,
-                                         @Valid @RequestBody String name) {
-        return participantService.createParticipant(meetingId, name);
+    public Participant createParticipant(
+            @PathVariable UUID meetingId,
+            @RequestParam(defaultValue = "false") boolean includeInAllExpenses,
+            @Valid @RequestBody String name) {
+        return participantService.createParticipant(meetingId, name, includeInAllExpenses);
     }
 }
